@@ -1,0 +1,158 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/lmtm/gulp-front-matter#readme"
+
+    >gulp-front-matter (v1.3.0)</a>
+</h1>
+<h4>Extract front-matter header from files</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-front-matter">module gulp-front-matter</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-front-matter.gulp-front-matter">
+            function <span class="apidocSignatureSpan"></span>gulp-front-matter
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-front-matter" id="apidoc.module.gulp-front-matter">module gulp-front-matter</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-front-matter.gulp-front-matter" id="apidoc.element.gulp-front-matter.gulp-front-matter">
+        function <span class="apidocSignatureSpan"></span>gulp-front-matter
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function gulpFrontMatter(options) {
+  options = options || {};
+
+  var property;
+  if (options.property !== undefined) {
+    if (typeof options.property !== &#x27;string&#x27;) {
+      throw new PluginError(&#x27;gulp-front-matter&#x27;, new TypeError(
+        options.property +
+        &#x27; is not a string. &#x22;property&#x22; option must be a string.&#x27;
+      ));
+    }
+    property = options.property;
+  } else {
+    property = &#x27;frontMatter&#x27;;
+  }
+
+  return new Transform({
+    objectMode: true,
+    transform: function gulpFrontMatterTransform(file, enc, cb) {
+      var run = new VinylBufferStream(function(buf, done) {
+        var content;
+
+        tryit(function() {
+          content = frontMatter(String(buf), {filename: file.path});
+          objectPath.set(file, property, content.attributes);
+        }, function(err) {
+          if (err) {
+            err.message = err.stack.replace(/\n +at[\s\S]*/, &#x27;&#x27;);
+            var errorOption = {};
+            if (file.path !== undefined) {
+              errorOption.fileName = file.path;
+            }
+            done(new PluginError(&#x27;gulp-front-matter&#x27;, err, errorOption));
+            return;
+          }
+
+          if (options.remove !== false) {
+            done(null, new Buffer(content.body));
+            return;
+          }
+
+          done(null, buf);
+        });
+      });
+
+      var self = this;
+
+      run(file, function(err, contents) {
+        if (err) {
+          self.emit(&#x27;error&#x27;, err);
+        } else {
+          file.contents = contents;
+          self.push(file);
+        }
+        cb();
+      });
+    }
+  });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
